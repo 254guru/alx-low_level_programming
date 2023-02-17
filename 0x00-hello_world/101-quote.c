@@ -1,13 +1,18 @@
-#include <unistd.h>
+#include  <unistd.h>
+
 /**
- * main - Prints without printf, puts or man
- * Return: len
+ * main - Entry
+ *
+ * Return: Always 1 (on error)
  */
 
 int main(void)
 {
-    const char msg[] = "and that piece of art is useful\" - Dora Korpar, 2015-10-19\n";
-    ssize_t len = sizeof(msg) - 1;
-    ssize_t n = write(2, msg, len);
-    return (n != len);
+	const char msg[] = "and that piece of art is useful\""
+	       			" - Dora Korpar, 2015-10-19\n";
+	ssize_t len = sizeof(msg) - 1;
+
+	ssize_t n = write(2, msg, len);
+
+	return (n != len);
 }
