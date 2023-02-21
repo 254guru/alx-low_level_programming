@@ -3,7 +3,7 @@
 /**
  * _abs - checks for absolute  value of integer
  *
- * @i: parameter to be checked
+ * @a: parameter to be checked
  *
  * Return: always a
  */
