@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "main.h"
 
 /**
   * puts2 - Prints every other character of a string
@@ -23,4 +23,3 @@ void puts2(char *str)
 
 	_putchar('\n');
 }
-
