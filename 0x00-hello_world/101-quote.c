@@ -1,18 +1,12 @@
-#include  <unistd.h>
+#include <unistd.h>
 
 /**
- * main - Entry
- *
- * Return: Always 1 (on error)
- */
-
+  * main - Prints a text
+  *
+  * Return: Always 1 (Success)
+  */
 int main(void)
 {
-	const char msg[] = "and that piece of art is useful\""
-	       			" - Dora Korpar, 2015-10-19\n";
-	ssize_t len = sizeof(msg) - 1;
-
-	ssize_t n = write(2, msg, len);
-
-	return (n != len);
+	write(2, "and that piece of art is useful\" - Dora Korpar, 2015-10-19\n", 59);
+	return (1);
 }
