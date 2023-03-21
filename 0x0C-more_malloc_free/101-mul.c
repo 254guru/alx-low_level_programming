@@ -1,90 +1,90 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 /**
- * multiply - multiplies two positive numbers
- * @num1: first number to be multiplied
- * @num2: second number to be multiplied
+ * multiply - multiply two positive integers
+ * @num1: the first number to be multiplied
+ * @num2: the second number to be multiplied
  *
- * Return: 0 on success, 98 on failure
+ * Return: the result of multiplication
  */
-
-char *multiply(char *num1, char *num2);
-void *memset(void *s, int c, size_t n);
-void *malloc(size_t size);
-void free(void *ptr);
-void exit(int status);
-
-/**
- * main - checks result
- * @argc: argument count
- * @argv: argument vector
- *
- * Return: 0
- */
-
-int main(int argc, char **argv)
+int multiply(const char *num1, const char *num2)
 {
-    char *result;
+    int len1 = 0, len2 = 0, i, j, res_len, carry = 0, sum = 0;
+    int *result;
 
-    if (argc != 3) {
-        write(1, "Error\n", 6);
+    while (num1[len1])
+        len1++;
+    while (num2[len2])
+        len2++;
+
+    res_len = len1 + len2;
+    result = calloc(res_len, sizeof(int));
+
+    if (!result)
         exit(98);
+
+    for (i = len1 - 1; i >= 0; i--)
+    {
+        carry = 0;
+        for (j = len2 - 1; j >= 0; j--)
+        {
+            sum = (num1[i] - '0') * (num2[j] - '0') +
+                  result[i + j + 1] + carry;
+            carry = sum / 10;
+            result[i + j + 1] = sum % 10;
+        }
+        result[i + j + 1] = carry;
     }
 
-    result = multiply(argv[1], argv[2]);
-    write(1, result, _strlen(result));
-    write(1, "\n", 1);
+    i = 0;
+    while (result[i] == 0 && i < res_len - 1)
+        i++;
+
+    for (; i < res_len; i++)
+        printf("%d", result[i]);
+
+    printf("\n");
+
     free(result);
 
     return (0);
 }
 
-char *multiply(char *num1, char *num2)
+/**
+ * main - multiply two positive integers
+ * @argc: the number of arguments passed
+ * @argv: an array of pointers to the arguments
+ *
+ * Return: 0 on success, 98 on error
+ */
+int main(int argc, char **argv)
 {
-    char *result;
-    int len1, len2, i, j, k, carry, n1, n2, sum;
+    int i;
 
-    len1 = _strlen(num1);
-    len2 = _strlen(num2);
-    result = malloc(len1 + len2);
-    if (result == NULL) {
-        exit(98);
+    if (argc != 3)
+    {
+        printf("Error\n");
+        return (98);
     }
 
-    memset(result, '0', len1 + len2);
-
-    for (i = len1 - 1; i >= 0; i--) {
-        carry = 0;
-        n1 = num1[i] - '0';
-
-        for (j = len2 - 1; j >= 0; j--) {
-            n2 = num2[j] - '0';
-            k = i + j + 1;
-            sum = n1 * n2 + carry + (result[k] - '0');
-            carry = sum / 10;
-            result[k] = (sum % 10) + '0';
-        }
-
-        if (carry > 0) {
-            result[i] += carry;
+    for (i = 1; i < argc; i++)
+    {
+        int j = 0;
+        while (argv[i][j])
+        {
+            if (!isdigit(argv[i][j]))
+            {
+                printf("Error\n");
+                return (98);
+            }
+            j++;
         }
     }
 
-    if (*result == '0') {
-        result++;
-    }
+    multiply(argv[1], argv[2]);
 
-    return (result);
+    return (0);
 }
 
-int _strlen(char *s)
-{
-    int len = 0;
-
-    while (*s != '\0') {
-        len++;
-        s++;
-    }
-
-    return (len);
-}
