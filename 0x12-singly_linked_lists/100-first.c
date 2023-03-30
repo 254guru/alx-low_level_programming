@@ -3,7 +3,7 @@
 void first(void) __attribute__ ((constructor));
 
 /**
-  * first - ...
+  * first - main function
   *
   * Return: Nothing.
   */
