@@ -1,71 +1,88 @@
 #include "main.h"
-
 /**
- * main - entry point
- * @argc: argument count
- * @argv: argument vector
- *
- * Return: 0 on success
- */
-
-int main(int argc, char *argv[])
-{
-	if (argc != 3)
-	{
-		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
-		return (97);
-	}
-
-	copy_file(argv[1], argv[2]);
-	return (0);
-}
-/**
- * copy_file - copies content of one file to another
+ * close_handler - function to handle close errors
  * @src: source file
- * @dest: destination file
+ * @dest: destination_file
  *
  * Return: void
  */
-
-void copy_file(const char *src, const char *dest)
+void close_handler(int src, int dest)
 {
-	int i, j, k;
-	char buf[1024];
+	int code;
 
-	i = open(src, O_RDONLY);
-	if (i == -1)
+	code = close(src);
+	if (code == FILE_ERROR)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", src);
-		exit(98);
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n",
+				src);
+		exit(CANNOT_CLOSE);
 	}
-	j = open(dest, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (j == -1)
+	code = close(dest);
+	if (code == FILE_ERROR)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", dest);
-		exit(99);
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n",
+				dest);
+		exit(CANNOT_CLOSE);
 	}
-	while ((k = read(i, buf, 1024)) > 0)
-	{
-		if (write(j, buf, k) != k)
-		{
-			dprintf(STDERR_FILENO, "Error: Can't write %s\n", dest);
-			exit(99);
-		}
-	}
-	if (k == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", src);
-		exit(98);
-	}
-	if (close(j) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", j);
-		exit(100);
-	}
-	if (close(i) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", i);
-		exit(100);
-	}
+}
 
+/**
+ * error_handler - function to handle file errors
+ * @src: source_file
+ * @dest: destination_file
+ * @argv: arguments vector
+ *
+ * Return: void
+ */
+void error_handler(int src, int dest, char *argv[])
+{
+	if (src == FILE_ERROR)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n",
+				argv[1]);
+		exit(DOES_NOT_EXIST_OR_UNABLE_TO_READ);
+	}
+	if (dest == FILE_ERROR)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n",
+				argv[2]);
+		exit(CANNOT_CREATE_OR_WRITE);
+	}
+}
+
+/**
+ * main - copies the content of a file to another file.
+ * @argc: argument count
+ * @argv: arguments vector.
+ *
+ * Return: 0 for sucess anything else is an error
+ */
+int main(int argc, char *argv[])
+{
+	int src, dest;
+	char file_buffer[BUFFER_SIZE];
+	ssize_t red, written;
+
+	if (argc != ARGUMENT_COUNT_EXPECTED)
+	{
+		dprintf(STDERR_FILENO, "%s\n",
+				"Usage: cp file_from file_to");
+		exit(INVALID_NUMBER_OF_ARGUMENTS);
+	}
+	src = open(argv[1], O_RDONLY);
+	dest = open(argv[2], O_CREAT | O_WRONLY
+			| O_TRUNC | O_APPEND, 0664);
+	error_handler(src, dest, argv);
+	red = BUFFER_SIZE;
+	while (red == BUFFER_SIZE)
+	{
+		red = read(src, file_buffer, BUFFER_SIZE);
+		if (red == FILE_ERROR)
+			error_handler(FILE_ERROR, 0, argv);
+		written = write(dest, file_buffer, red);
+		if (written == FILE_ERROR)
+			error_handler(0, FILE_ERROR, argv);
+	}
+	close_handler(src, dest);
+	return (0);
 }
