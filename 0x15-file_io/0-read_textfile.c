@@ -1,40 +1,41 @@
 #include "main.h"
 
 /**
- * read_textfile - reads a textfile and print to posix
- * @filename: the file to read from
- * @letters: number pf letters to read and print
+ * read_textfile - short description
+ * @filename: name of file
+ * @letters: characters inside the file
  *
- * Return: 0
+ * Return: return description
  */
 
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	char *buf;
-	ssize_t bytes_read, written;
 	FILE *file;
+	size_t written;
+	int print;
+
+	written = 0;
 
 	if (filename == NULL)
 		return (0);
 
 	file = fopen(filename, "r");
+
 	if (file == NULL)
 		return (0);
 
-	buf = malloc(letters * sizeof(char));
-	if (buf == NULL)
-		return (0);
+	print = fgetc(file);
+	while (written <= letters)
+	{
+		if (written == letters || print == -1)
+			break;
+		if (write(STDOUT_FILENO, &print, 1) == -1)
+			return (0);
 
-	bytes_read = fread(buf, sizeof(char), letters, file);
-	if (bytes_read == 0)
-		return (0);
+		written++;
+		print = fgetc(file);
+	}
 
-	written = write(STDOUT_FILENO, buf, bytes_read);
-	if (written == -1 || written != bytes_read)
-		return (0);
-
-	free(buf);
 	fclose(file);
-
-	return (bytes_read);
+	return (written);
 }
