@@ -22,13 +22,13 @@ void generate_key(const char *username, char *key)
  */
 int main(int argc, char *argv[])
 {
+	char key[20];
+
 	if (argc != 2)
 	{
 	printf("Usage: %s username\n", argv[0]);
 	return (1);
 	}
-
-	char key[20];
 
 	generate_key(argv[1], key);
 
