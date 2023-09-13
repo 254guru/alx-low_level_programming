@@ -43,13 +43,12 @@ shash_table_t *shash_table_create(unsigned long int size)
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 {
 	shash_node_t *new_node = NULL, *current = NULL, *prev = NULL;
+	unsigned long int index = key_index((unsigned char *)key, ht->size);
 
 	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
 	return (0);
 
 	/* Calculate the index using djb2 hash function */
-	unsigned long int index = key_index((unsigned char *)key, ht->size);
-
 	current = ht->array[index];
 	while (current != NULL)
 	{
