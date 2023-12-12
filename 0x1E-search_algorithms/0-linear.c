@@ -3,27 +3,14 @@
 
 /**
  * print_value_checked - simulate printing without using printf
- * @index: position at index
  * @value: param value
  *
  * Return: print message
  */
-void print_value_checked(size_t index, int value)
+void print_value_checked(int value)
 {
-	char index_str[20];
-	char value_str[20];
+	putchar(value + '0');
 
-	snprintf(index_str, sizeof(index_str), "%zu", index);
-	snprintf(value_str, sizeof(value_str), "%d", value);
-
-	char message[50] = "Value checked array[";
-
-	strcat(message, index_str);
-	strcat(message, "] = [");
-	strcat(message, value_str);
-	strcat(message, "]\n");
-
-	fputs(message, stdout);
 }
 
 /**
@@ -47,7 +34,7 @@ int linear_search(int *array, size_t size, int value)
 
 	for (i = 0; i < size; i++)
 	{
-		print_value_checked(i, array[i]);
+		print_value_checked(array[i]);
 
 		if (array[i] == value)
 		{
