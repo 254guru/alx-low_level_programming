@@ -12,16 +12,17 @@ void print_value_checked(size_t index, int value)
 {
 	char index_str[20];
 	char value_str[20];
-	
+
 	snprintf(index_str, sizeof(index_str), "%zu", index);
 	snprintf(value_str, sizeof(value_str), "%d", value);
-	
+
 	char message[50] = "Value checked array[";
+
 	strcat(message, index_str);
 	strcat(message, "] = [");
 	strcat(message, value_str);
 	strcat(message, "]\n");
-	
+
 	fputs(message, stdout);
 }
 
