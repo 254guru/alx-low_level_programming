@@ -9,8 +9,31 @@
  */
 void print_value_checked(int value)
 {
-	putchar(value + '0');
+	char buffer[1024];
+	int i = 0;
+	int temp = value;
+	int j;
 
+	if (temp == 0)
+	{
+		buffer[i++] = '0';
+	}
+	else
+	{
+		while (temp != 0)
+		{
+			int digit = temp % 10;
+
+			buffer[i++] = digit + '0';
+			temp /= 10;
+		}
+	}
+
+	for (j = i - 1; j >= 0; j--)
+	{
+		putchar(buffer[j]);
+	}
+	putchar('\n');
 }
 
 /**
