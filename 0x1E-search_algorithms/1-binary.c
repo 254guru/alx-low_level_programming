@@ -1,5 +1,30 @@
 #include <stdio.h>
 #include "search_algos.h"
+
+/**
+ * print_search_array - prints the array slice being searched
+ * @array: pointer to the array
+ * @start: starting index of the array slice
+ * @end: ending index of the array slice
+ *
+ * This function simulates the array slice being searched.
+ */
+void print_search_array(int *array, size_t start, size_t end)
+{
+	printf("Searching in array: ");
+
+	while (start <= end)
+	{
+		printf("%d", array[start]);
+
+		if (start != end)
+			printf(", ");
+		else
+			printf("\n");
+		start++;
+	}
+}
+
 /**
  * binary_search - searches for a value in a sorted array of integers
  * using binary search algorithm
@@ -14,21 +39,16 @@ int binary_search(int *array, size_t size, int value)
 	size_t start = 0;
 	size_t end = size - 1;
 	size_t mid;
-	size_t i;
 
 	if (array == NULL)
 	{
 		return (-1);
 	}
+
 	while (start <= end)
 	{
 		mid = start + (end - start) / 2;
-		printf("searching in array: ");
-		for (i = start; i <= end; i++)
-		{
-			printf("%d, ", array[i]);
-		}
-		printf("\n");
+		print_search_array(array, start, end);
 
 		if (array[mid] == value)
 		{
@@ -43,4 +63,6 @@ int binary_search(int *array, size_t size, int value)
 			end = mid - 1;
 		}
 	}
+
+	return (-1);
 }
